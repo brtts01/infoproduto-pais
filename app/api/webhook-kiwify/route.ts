@@ -8,16 +8,19 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json()
-  const order = body.order
 
-  console.log('order_status recebido:', order?.order_status)
-  console.log('slug recebido:', order?.TrackingParameters?.s1)
+  console.log('BODY COMPLETO:', JSON.stringify(body))
 
-  if (order?.order_status !== 'paid') {
-    return NextResponse.json({ ok: true, ignorado: true })
+  const order = body.order ?? body
+  const status = order?.order_status
+  const slug = order?.TrackingParameters?.s1
+
+  console.log('status:', status, 'slug:', slug)
+
+  if (status !== 'paid') {
+    return NextResponse.json({ ok: true, ignorado: true, status_recebido: status })
   }
 
-  const slug = order?.TrackingParameters?.s1
   if (!slug) {
     return NextResponse.json({ erro: 'slug nao encontrado' }, { status: 400 })
   }
