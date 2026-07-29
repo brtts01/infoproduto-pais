@@ -9,6 +9,16 @@ const SUGESTOES = [
   'Olhando pra trás, vejo o quanto você se dedicou pra gente. Hoje eu só quero dizer: obrigado por ser esse pai incrível.',
 ]
 
+function slugify(nome: string) {
+  return nome
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+}
+
 function useCountdown(alvo: string) {
   const [tempo, setTempo] = useState({ dias: 0, horas: 0, minutos: 0 })
   useEffect(() => {
@@ -64,7 +74,7 @@ export default function Home() {
     e.preventDefault()
     setEnviando(true)
 
-    const slug = nome.toLowerCase().replace(/\s+/g, '-') + '-' + Math.random().toString(36).slice(2, 6)
+    const slug = slugify(nome) + '-' + Math.random().toString(36).slice(2, 6)
 
     const { data: presente, error } = await supabase.from('presentes').insert({ nome_pai: nome, mensagem, musica_url: musica, slug }).select().single()
 
@@ -93,7 +103,7 @@ export default function Home() {
 
       <div className="w-full max-w-md text-center mb-4">
         <p className="text-[10px] tracking-[0.2em] uppercase mb-3 font-medium" style={{ color: '#d99a6c' }}>dia dos pais</p>
-        <h1 className="text-4xl font-serif mb-3 leading-tight" style={{ color: '#f3e4d4' }}>Crie uma homenagem para o seu pai</h1>
+        <h1 className="text-4xl font-serif mb-3 leading-tight" style={{ color: '#f3e4d4' }}>Crie uma homenagem pro seu pai</h1>
         <p className="text-sm font-light mb-4" style={{ color: '#a3866e' }}>Fotos, uma mensagem e a música que ele ama, tudo em uma página só pra ele.</p>
 
         <div className="flex items-center justify-center gap-3 mb-2">
@@ -147,7 +157,7 @@ export default function Home() {
         </div>
 
         <button type="submit" disabled={enviando} className="rounded-full py-3 text-sm font-medium mt-2" style={{ background: enviando ? '#6b4a35' : '#d99a6c', color: '#1a120d' }}>
-          {enviando ? 'Enviando para pagamento...' : 'Criar presente — R$ 19,90'}
+          {enviando ? 'Criando...' : 'Criar presente — R$ 19,90'}
         </button>
       </form>
 
