@@ -9,6 +9,16 @@ const SUGESTOES = [
   'Olhando pra trás, vejo o quanto você se dedicou pra gente. Hoje eu só quero dizer: obrigado por ser esse pai incrível.',
 ]
 
+function slugify(nome: string) {
+  return nome
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+}
+
 function useCountdown(alvo: string) {
   const [tempo, setTempo] = useState({ dias: 0, horas: 0, minutos: 0 })
   useEffect(() => {
@@ -64,7 +74,7 @@ export default function Home() {
     e.preventDefault()
     setEnviando(true)
 
-    const slug = nome.toLowerCase().replace(/\s+/g, '-') + '-' + Math.random().toString(36).slice(2, 6)
+    const slug = slugify(nome) + '-' + Math.random().toString(36).slice(2, 6)
 
     const { data: presente, error } = await supabase.from('presentes').insert({ nome_pai: nome, mensagem, musica_url: musica, slug }).select().single()
 
