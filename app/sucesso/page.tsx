@@ -9,7 +9,8 @@ export default function Sucesso() {
   const [copiado, setCopiado] = useState(false)
 
   useEffect(() => {
-    const s = localStorage.getItem('ultimo_slug')
+    const params = new URLSearchParams(window.location.search)
+    const s = params.get('demo') || localStorage.getItem('ultimo_slug')
     if (!s) { setStatus('erro'); return }
     setSlug(s)
 
